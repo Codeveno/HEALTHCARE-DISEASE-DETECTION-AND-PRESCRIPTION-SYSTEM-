@@ -1,0 +1,73 @@
+Disease Prediction and Medical Recommendation System.
+
+This is the implementation of a Disease Prediction and Medical Recommendation System developed for the fourth year project 
+by Agnes Omuronji and Achieng Kassy for project development unit in 4th year.
+
+ Introduction
+The Disease Prediction and Medical Recommendation System uses machine learning techniques to predict
+ diseases based on input symptoms by the patient. It provides recommendations for medications, diets, and workouts tailored to specific diseases.
+  The project uses a dataset from Kaggle comprising symptoms, diseases, medications, and other medical attributes to train and evaluate machine learning models.
+
+Project Overview
+The project files are organized into the following directories:
+
+ 
+  kaggle_dataset
+ 	     `description.csv`: Descriptions of diseases.
+    	`diets.csv`: Recommended diets for diseases.
+     	`medications.csv`: Medications prescribed for diseases.
+ 	    `precautions_df.csv`: Precautions to be taken for diseases.
+ 	    `Symptom-severity.csv`: Severity of symptoms.
+ 	     `symptoms_df.csv`: Symptoms with corresponding disease labels.
+     	`Training.csv`: Dataset for training machine learning models.
+     	`workout_df.csv`: Recommended workouts for diseases.
+
+    Model
+         - `RandomForest.pkl`: Trained Random Forest model for disease prediction.
+
+     Templates
+           - `index.html`: A Frontend interface for the Disease Prediction System.
+
+    Static
+          - `bgCover.jpg`, `img.png` : Images utilized in the frontend webpage.
+
+    Screenshots
+           - Includes screenshots of the project and sample output
+
+
+How to Run the Project
+To run the Disease Prediction and Medical Recommendation System:
+
+1         Install required Python libraries:
+   ```bash
+   pip install pandas scikit-learn flask ast numpy fuzzywuzzy pickle
+
+2.         Go to the project directory:
+         ```bash
+         cd ML_project
+
+3.          Start the Flask application
+           ```bash
+           python main.py
+
+4.          Access the web interface in your browser at:
+           ```bash
+        http://localhost:5000
+
+		alternatively this application is also hosted and can be accessde via the link:
+     
+ 
+
+Developers
+ 	MOPHINE AGNES OMURONJI : IN17/00040/20
+ 	ACHIENG KASERA:
+   
+
+
+   
+Project Files Overview
+
+- `main.py`: Entry point for the Flask web application.
+- `disease_prediction_system.ipynb`: Jupyter Notebook with data preprocessing and model training.
+- `index.html`: Front-end interface for the web application.
+
