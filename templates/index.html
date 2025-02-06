@@ -65,14 +65,9 @@
             left: 0;
             width: 100%;
             display: flex;
-           /* flex-direction: row;*/
             flex-direction: column;
             align-items: center;
-        
         }
-
-    
-
     </style>
 </head>
 <body>
@@ -83,12 +78,13 @@
             <img class="myimg" src="static/img.png" alt="Logo">
             <h5 class="titleName">HEALTHCARE DISEASE DETECTION AND PRESCRIPTION SYSTEM </h5>
         </div>
-        <a class="navbar-brand" href="" id="resetButton">Reset</a>
-        </button>
+        <a class="navbar-brand" href="{{ url_for('predict') }}" id="resetButton">Reset</a>
+
+        <a class="navbar-brand" href="{{ url_for('logout') }}" id="logoutButton">Logout</a>
     </div>
 </nav>
 
-<!-- main form of page -->
+<!-- Main form of the page -->
 <div class="container my-4 mt-4 bg-glass p-4 rounded">
     <form action="/predict" method="post">
         <div class="form-group">
@@ -172,10 +168,12 @@
 </div>
 {% endif %}
 
+<!-- Footer -->
 <div class="footer">
     <div class="mt-1 my-1 text-center text-green">
         <i>Machine Learning Project By: Agnes Omuronji and Achieng Kasera</i>
     </div>
 </div>
+
 </body>
-</html> 
+</html>
