@@ -79,7 +79,6 @@
             <h5 class="titleName">HEALTHCARE DISEASE DETECTION AND PRESCRIPTION SYSTEM </h5>
         </div>
         <a class="navbar-brand" href="{{ url_for('predict') }}" id="resetButton">Reset</a>
-
         <a class="navbar-brand" href="{{ url_for('logout') }}" id="logoutButton">Logout</a>
     </div>
 </nav>
@@ -92,8 +91,8 @@
             <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="Type symptoms such as headache, mild fever, acidity, etc...">
         </div>
         <br>
-        {% if message %}
-        <p class="message-text">{{ message }}</p>
+        {% if error %}
+        <p class="message-text">{{ error }}</p>
         {% endif %}
         <br>
         <div class="d-flex justify-content-center">
@@ -109,16 +108,14 @@
     <table class="table">
         <thead>
             <tr>
-                <h6>Showing predictions for {{symptoms}}</h6>
-            </tr>
-        </thead>
-        <thead>
-            <tr>
-                <th scope="col">Disease</th>
-                <th scope="col">{{predicted_disease}}</th>
+                <h6>Showing predictions for {{ symptoms }}</h6>
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <th scope="row">Disease</th>
+                <td>{{ predicted_disease }}</td>
+            </tr>
             <tr>
                 <th>Description</th>
                 <td>{{ dis_des }}</td>
@@ -137,8 +134,8 @@
                 <th>Medications</th>
                 <td>
                     <ul>
-                        {% for i in medications %}
-                            <li>{{ i }}</li>
+                        {% for med in medications %}
+                            <li>{{ med }}</li>
                         {% endfor %}
                     </ul>
                 </td>
@@ -157,8 +154,8 @@
                 <th>Diet</th>
                 <td>
                     <ul>
-                        {% for i in my_diet %}
-                            <li>{{ i }}</li>
+                        {% for diet_item in diet %}
+                            <li>{{ diet_item }}</li>
                         {% endfor %}
                     </ul>
                 </td>
@@ -174,6 +171,5 @@
         <i>Machine Learning Project By: Agnes Omuronji and Achieng Kasera</i>
     </div>
 </div>
-
 </body>
 </html>
