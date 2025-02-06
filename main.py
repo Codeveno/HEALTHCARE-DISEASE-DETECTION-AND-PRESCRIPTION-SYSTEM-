@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management (ensure it's more secure in production)
+app.secret_key = os.urandom(24)  
 
 # Loading the datasets from Kaggle
 sym_des = pd.read_csv("kaggle_dataset/symptoms_df.csv")
@@ -64,11 +64,12 @@ users = {
     "user1": generate_password_hash("password1")
 }
 
+# routes
 @app.route('/')
 def home():
     if 'username' not in session:
-        return redirect(url_for('login'))  # Redirecting to login if not logged in
-    return redirect(url_for('predict'))  # If logged in, redirect to prediction page
+        return redirect(url_for('login'))  
+    return redirect(url_for('predict'))  
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -77,8 +78,8 @@ def login():
         password = request.form['password']
 
         if username in users and check_password_hash(users[username], password):
-            session['username'] = username  # Create a session for the user
-            return redirect(url_for('predict'))  # Redirect to prediction page
+            session['username'] = username  
+            return redirect(url_for('predict'))  
         else:
             error = "Invalid username or password"
             return render_template('login.html', error=error)
@@ -105,13 +106,13 @@ def register():
 
 @app.route('/reset')
 def reset():
-    return redirect(url_for('predict'))  # Redirect back to the prediction page, or handle your reset logic here
+    return redirect(url_for('predict'))  
 
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
     if 'username' not in session:
-        return redirect(url_for('login'))  # Ensure the user is logged in
+        return redirect(url_for('login'))  
 
     if request.method == 'POST':
         symptoms = request.form.get('symptoms')
@@ -133,9 +134,8 @@ def predict():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # Clear the session
-    return redirect(url_for('login'))  # Redirect to login page after logout
-
+    session.pop('username', None)  
+    return redirect(url_for('login'))  
 
 if __name__ == "__main__":
     app.run(debug=True)
