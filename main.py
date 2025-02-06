@@ -38,24 +38,23 @@ def information(predicted_dis):
     disease_precautions = [col for col in disease_precautions.values[0]]
 
     disease_medications = medications[medications['Disease'] == predicted_dis]['Medication']
-    disease_medications = disease_medications.values[0].split(',')  # Split into list of strings
+    disease_medications = ast.literal_eval(disease_medications.values[0])  # Convert string to list
 
     disease_diet = diets[diets['Disease'] == predicted_dis]['Diet']
-    disease_diet = disease_diet.values[0].split(',')  # Split into list of strings
+    disease_diet = ast.literal_eval(disease_diet.values[0])  # Convert string to list
 
     disease_workout = workout[workout['disease'] == predicted_dis]['workout']
     disease_workout = disease_workout.values[0].split(',')  # Split into list of strings
 
     return disease_description, disease_precautions, disease_medications, disease_diet, disease_workout
 
-# Function that passes user input symptoms to the model
+# Function to predict the disease based on symptoms
 def predicted_value(patient_symptoms):
     i_vector = np.zeros(len(symptoms_list_processed))
     for i in patient_symptoms:
         i_vector[symptoms_list_processed[i]] = 1
-    prediction = Rf.predict([i_vector])[0]
-    print("Model Prediction:", prediction)
-    return diseases_list[prediction]
+    return diseases_list[Rf.predict([i_vector])[0]]
+
 
 # Correcting spelling of user symptoms
 def correct_spelling(symptom):
