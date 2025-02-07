@@ -1,4 +1,7 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+
+import re
 import hashlib
 import numpy as np
 import pandas as pd
@@ -9,7 +12,7 @@ import os
 import ast
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management
+app.secret_key = os.urandom(24)  
 
 # Loading the datasets from Kaggle
 sym_des = pd.read_csv("kaggle_dataset/symptoms_df.csv")
@@ -30,38 +33,30 @@ diseases_list = {15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic c
 symptoms_list_processed = {symptom.replace('_', ' ').lower(): value for symptom, value in symptoms_list.items()}
 
 
-# Function to get the information about the disease
+# Function to predict the disease based on symptoms
 
-
-
-import ast  # Importing module for safe string-to-list conversion
+import ast  # For literal_eval function
 
 def information(predicted_dis):
     # Extract description as a single string
     disease_description = description[description['Disease'] == predicted_dis]['Description']
-    disease_description = " ".join(disease_description.values)  # Convert to string
+    disease_description = " ".join(disease_description.values)  
 
     # Extract precautions correctly (flattening into a simple list)
     disease_precautions = precautions[precautions['Disease'] == predicted_dis][['Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
-    disease_precautions = disease_precautions.values.flatten().tolist()  # Convert to a simple list
+    disease_precautions = disease_precautions.values.flatten().tolist()  
 
     # Extract medications correctly (fixing list-like string issue)
     disease_medications = medications[medications['Disease'] == predicted_dis]['Medication'].values
-    disease_medications = [med for med_list in disease_medications for med in ast.literal_eval(med_list) if isinstance(med_list, str)]  # Convert stored list-like strings to actual lists
-
-    # Extract diet correctly (fixing list-like string issue)
+    disease_medications = [med for med_list in disease_medications for med in ast.literal_eval(med_list) if isinstance(med_list, str)]  
+   
     disease_diet = diets[diets['Disease'] == predicted_dis]['Diet'].values
-    disease_diet = [diet for diet_list in disease_diet for diet in ast.literal_eval(diet_list) if isinstance(diet_list, str)]  # Convert stored list-like strings to actual lists
+    disease_diet = [diet for diet_list in disease_diet for diet in ast.literal_eval(diet_list) if isinstance(diet_list, str)]  
 
     # Extract workout correctly
     disease_workout = workout[workout['disease'] == predicted_dis]['workout'].tolist()
 
     return disease_description, disease_precautions, disease_medications, disease_diet, disease_workout
-
-
-
-
-
 
 
 # Function to predict the disease based on symptoms
@@ -84,8 +79,8 @@ users = {
 @app.route('/')
 def home():
     if 'username' not in session:
-        return redirect(url_for('login'))  # Redirecting to login if not logged in
-    return redirect(url_for('predict'))  # If logged in, redirect to prediction page
+        return redirect(url_for('login'))  
+    return redirect(url_for('predict'))  
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -94,31 +89,60 @@ def login():
         password = request.form['password']
 
         if username in users and check_password_hash(users[username], password):
-            session['username'] = username  # Create a session for the user
-            return redirect(url_for('predict'))  # Redirect to prediction page
+            session['username'] = username  
+            return redirect(url_for('predict'))  
         else:
             error = "Invalid username or password"
             return render_template('login.html', error=error)
 
     return render_template('login.html')
 
-# Register route
+
+# Function to validate username
+def is_valid_username(username):
+    return re.fullmatch(r'^[A-Za-z][A-Za-z0-9_]*$', username) is not None
+
+# Function to validate password strength
+def is_strong_password(password):
+    return (
+        len(password) >= 8 and
+        any(c.isupper() for c in password) and
+        any(c.islower() for c in password) and
+        any(c.isdigit() for c in password) and
+        any(c in "!@#$%^&*()-+=<>?/[]{},." for c in password)
+    )
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
+        # Validate username
+        if not is_valid_username(username):
+            flash('Invalid username! Use letters, numbers, and underscores (_), but must start with a letter.', 'error')
+            return redirect(url_for('register'))
+
         # Check if the username is already taken
         if username in users:
-            error = "Username already taken!"
-            return render_template('register.html', error=error)
+            flash("Username already taken!", "error")
+            return redirect(url_for('register'))
+
+        # Validate password strength
+        if not is_strong_password(password):
+            flash("Weak password! Use at least 8 characters with uppercase, lowercase, numbers, and symbols.", "error")
+            return redirect(url_for('register'))
 
         # Add new user to the dictionary
         users[username] = generate_password_hash(password)
-        return redirect(url_for('login'))
+
+        # Flash success message
+        flash('Account created successfully! Continue to login page.', 'success')
+
+        return redirect(url_for('register'))  
 
     return render_template('register.html')
+
 
 # Single predict route definition
 @app.route('/predict', methods=['GET', 'POST'])
@@ -150,9 +174,11 @@ def predict():
         print(f"Error: {e}")
         return render_template('index.html', error="An error occurred while processing your request.")
 
+
+
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # Remove the username from session
+    session.pop('username', None)  
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

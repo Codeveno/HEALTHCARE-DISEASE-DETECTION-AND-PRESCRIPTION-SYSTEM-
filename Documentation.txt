@@ -55,7 +55,7 @@ To run the Disease Prediction and Medical Recommendation System:
         http://localhost:5000
 
 		alternatively this application is also hosted and can be accessde via the link:
-     
+                             https://healthcare-disease-detection.onrender.com 
  
 
 Developers
