@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session
 import hashlib
 import numpy as np
 import pandas as pd
@@ -9,7 +9,7 @@ import os
 import ast
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management (ensure it's more secure in production)
+app.secret_key = os.urandom(24)  # Secret key for session management
 
 # Loading the datasets from Kaggle
 sym_des = pd.read_csv("kaggle_dataset/symptoms_df.csv")
@@ -29,24 +29,31 @@ diseases_list = {15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic c
 
 symptoms_list_processed = {symptom.replace('_', ' ').lower(): value for symptom, value in symptoms_list.items()}
 
-# Function to extract information from all the datasets
+
+
+
+
+
+
 def information(predicted_dis):
     disease_description = description[description['Disease'] == predicted_dis]['Description']
     disease_description = " ".join([w for w in disease_description])
 
     disease_precautions = precautions[precautions['Disease'] == predicted_dis][['Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
-    disease_precautions = [col for col in disease_precautions.values[0]]
+    disease_precautions = [col for col in disease_precautions.values]
 
     disease_medications = medications[medications['Disease'] == predicted_dis]['Medication']
-    disease_medications = ast.literal_eval(disease_medications.values[0])  # Convert string to list
+    disease_medications = [med for med in disease_medications.values]
 
     disease_diet = diets[diets['Disease'] == predicted_dis]['Diet']
-    disease_diet = ast.literal_eval(disease_diet.values[0])  # Convert string to list
+    disease_diet = [die for die in disease_diet.values]
 
     disease_workout = workout[workout['disease'] == predicted_dis]['workout']
-    disease_workout = disease_workout.values[0].split(',')  # Split into list of strings
 
     return disease_description, disease_precautions, disease_medications, disease_diet, disease_workout
+
+
+
 
 # Function to predict the disease based on symptoms
 def predicted_value(patient_symptoms):
@@ -55,8 +62,7 @@ def predicted_value(patient_symptoms):
         i_vector[symptoms_list_processed[i]] = 1
     return diseases_list[Rf.predict([i_vector])[0]]
 
-
-# Correcting spelling of user symptoms
+# Function to correct the spelling of symptoms
 def correct_spelling(symptom):
     corrected = process.extractOne(symptom, symptoms_list_processed.keys())
     return corrected[0] if corrected[1] > 80 else None
@@ -105,6 +111,7 @@ def register():
 
     return render_template('register.html')
 
+# Single predict route definition
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
     if 'username' not in session:

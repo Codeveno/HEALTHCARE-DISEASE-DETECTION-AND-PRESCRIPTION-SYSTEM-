@@ -49,7 +49,7 @@
             border: none;
             border-radius: 8px;
             padding: 10px;
-            color: white;
+            color: rgb(192, 210, 222);
         }
         .btn:hover {
             background-color: rgba(16, 4, 95, 0.4);
@@ -144,22 +144,24 @@
                 <th>Workout</th>
                 <td>
                     <ul>
-                        {% for i in workout %}
-                            <li>{{ i }}</li>
+                        {% for exercise in workout %}
+                            <li>{{ exercise }}</li>
                         {% endfor %}
                     </ul>
                 </td>
             </tr>
+
             <tr>
                 <th>Diet</th>
                 <td>
                     <ul>
-                        {% for diet_item in diet %}
+                        {% for diet_item in my_diet %}
                             <li>{{ diet_item }}</li>
                         {% endfor %}
                     </ul>
                 </td>
             </tr>
+            
         </tbody>
     </table>
 </div>
