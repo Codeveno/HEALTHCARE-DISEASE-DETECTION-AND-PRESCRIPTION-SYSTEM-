@@ -30,27 +30,36 @@ diseases_list = {15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic c
 symptoms_list_processed = {symptom.replace('_', ' ').lower(): value for symptom, value in symptoms_list.items()}
 
 
+# Function to get the information about the disease
 
 
 
-
+import ast  # Importing module for safe string-to-list conversion
 
 def information(predicted_dis):
+    # Extract description as a single string
     disease_description = description[description['Disease'] == predicted_dis]['Description']
-    disease_description = " ".join([w for w in disease_description])
+    disease_description = " ".join(disease_description.values)  # Convert to string
 
+    # Extract precautions correctly (flattening into a simple list)
     disease_precautions = precautions[precautions['Disease'] == predicted_dis][['Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
-    disease_precautions = [col for col in disease_precautions.values]
+    disease_precautions = disease_precautions.values.flatten().tolist()  # Convert to a simple list
 
-    disease_medications = medications[medications['Disease'] == predicted_dis]['Medication']
-    disease_medications = [med for med in disease_medications.values]
+    # Extract medications correctly (fixing list-like string issue)
+    disease_medications = medications[medications['Disease'] == predicted_dis]['Medication'].values
+    disease_medications = [med for med_list in disease_medications for med in ast.literal_eval(med_list) if isinstance(med_list, str)]  # Convert stored list-like strings to actual lists
 
-    disease_diet = diets[diets['Disease'] == predicted_dis]['Diet']
-    disease_diet = [die for die in disease_diet.values]
+    # Extract diet correctly (fixing list-like string issue)
+    disease_diet = diets[diets['Disease'] == predicted_dis]['Diet'].values
+    disease_diet = [diet for diet_list in disease_diet for diet in ast.literal_eval(diet_list) if isinstance(diet_list, str)]  # Convert stored list-like strings to actual lists
 
-    disease_workout = workout[workout['disease'] == predicted_dis]['workout']
+    # Extract workout correctly
+    disease_workout = workout[workout['disease'] == predicted_dis]['workout'].tolist()
 
     return disease_description, disease_precautions, disease_medications, disease_diet, disease_workout
+
+
+
 
 
 

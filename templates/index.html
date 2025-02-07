@@ -120,16 +120,18 @@
                 <th>Description</th>
                 <td>{{ dis_des }}</td>
             </tr>
+            
             <tr>
                 <th>Precautions</th>
                 <td>
                     <ul>
-                        {% for i in my_precautions %}
-                            <li>{{ i }}</li>
+                        {% for precaution in my_precautions %}
+                            <li>{{ precaution }}</li>
                         {% endfor %}
                     </ul>
                 </td>
             </tr>
+
             <tr>
                 <th>Medications</th>
                 <td>
