@@ -54,57 +54,6 @@
 
 
       
-    /* Responsive screen size adjustments */
-    @media (max-width: 992px) {
-        .container {
-            padding: 30px;
-            max-width: 95%;
-        }
-    }
-    @media (max-width: 768px) {
-        .container {
-            padding: 20px;
-            max-width: 100%;
-        }
-        .titleName {
-            font-size: 14px;
-        }
-        .btn {
-            width: 100%;
-        }
-        .navbar-brand {
-            font-size: 14px;
-        }
-    }
-    @media (max-width: 480px) {
-        .logo {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .myimg {
-            width: 40px;
-            height: 40px;
-        }
-        .titleName {
-            font-size: 12px;
-        }
-        .btn {
-            width: 100%;
-            font-size: 14px;
-        }
-        .container {
-            padding: 15px;
-        }
-        .footer {
-            text-align: center;
-            font-size: 12px;
-        }
-    }
-
-
-
-
 
         .btn:hover {
             background-color: rgba(16, 4, 95, 0.4);
@@ -230,5 +179,34 @@
         <i>Machine Learning Project By: Agnes Omuronji and Achieng Kasera</i>
     </div>
 </div>
+
+
+<script>
+    function adjustUI() {
+        let screenWidth = window.innerWidth;
+        let formInput = document.getElementById("symptoms");
+        let predictButton = document.querySelector(".btn-danger");
+
+        if (screenWidth < 768) {
+            document.body.style.zoom = "0.9";
+            formInput.style.fontSize = "14px";
+            predictButton.style.width = "100%";
+        } else if (screenWidth < 480) {
+            document.body.style.zoom = "0.8";
+            formInput.style.fontSize = "12px";
+            predictButton.style.width = "100%";
+            predictButton.style.fontSize = "14px";
+        } else {
+            document.body.style.zoom = "1";
+            formInput.style.fontSize = "16px";
+            predictButton.style.width = "30%";
+        }
+    }
+
+    window.onload = adjustUI;
+    window.onresize = adjustUI;
+</script>
+
+
 </body>
 </html>
