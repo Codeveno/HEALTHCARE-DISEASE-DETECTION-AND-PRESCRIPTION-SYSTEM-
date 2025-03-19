@@ -1,7 +1,5 @@
 Disease Prediction and Medical Recommendation System.
 
-This is the implementation of a Disease Prediction and Medical Recommendation System developed for the fourth year project 
-by Agnes Omuronji and Achieng Kassy for project development unit in 4th year.
 
  Introduction
 The Disease Prediction and Medical Recommendation System uses machine learning techniques to predict
@@ -58,9 +56,7 @@ To run the Disease Prediction and Medical Recommendation System:
                              https://healthcare-disease-detection.onrender.com 
  
 
-Developers
- 	MOPHINE AGNES OMURONJI : IN17/00040/20
- 	ACHIENG KASERA:
+
    
 
 
